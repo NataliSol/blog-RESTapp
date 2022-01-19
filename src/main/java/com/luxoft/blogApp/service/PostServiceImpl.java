@@ -16,12 +16,12 @@ public class PostServiceImpl implements PostService {
     private PostRepository postRepository;
 
     @Override
-    public Post savePost(Post post) {
+    public Post addPost(Post post) {
         return postRepository.save(post);
     }
 
     @Override
-    public List<Post> fetchPostList() {
+    public List<Post> getPostList() {
         return postRepository.findAll();
     }
 
@@ -41,7 +41,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePostById(Long postId) {
-       postRepository.deleteById(postId);
+
+        postRepository.deleteById(postId);
+    }
+
+   @Override
+    public Post getPostByTitle(String postTitle){
+        return postRepository.findByPostTitleIgnoreCase(postTitle);
     }
 
 }

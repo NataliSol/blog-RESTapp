@@ -5,11 +5,15 @@ import com.luxoft.blogApp.entity.Post;
 import java.util.List;
 
 public interface PostService {
-    Post savePost(Post post);
+    public Post addPost(Post post);
 
-    List<Post> fetchPostList();
+    public List<Post> getPostList();
 
-    Post updatePost(Long postId, Post post);
+    public Post updatePost(Long postId, Post post);
 
-    void deletePostById(Long postId);
+    public void deletePostById(Long postId);
+
+    public Post getPostByTitle(String postTitle);
+
+
 }

@@ -14,13 +14,13 @@ public class PostController {
     private PostService postService;
 
     @PostMapping("/api/v1/posts")
-    public Post savePost(@RequestBody Post post) {
-        return postService.savePost(post);
+    public Post addPost(@RequestBody Post post) {
+        return postService.addPost(post);
     }
 
     @GetMapping("/api/v1/posts")
-    public List<Post> fetchPostList() {
-        return postService.fetchPostList();
+    public List<Post> getPostList() {
+        return postService.getPostList();
     }
 
     @PutMapping("/api/v1/posts/{id}")
@@ -33,5 +33,9 @@ public class PostController {
     public String deletePostById(@PathVariable("id") Long postId) {
         postService.deletePostById(postId);
         return "Post deleted Successfully!!";
+    }
+    @GetMapping("/api/v1/posts/{title}")
+    public Post getPostByTitle(@PathVariable("title") String postTitle) {
+          return postService.getPostByTitle(postTitle);
     }
 }
