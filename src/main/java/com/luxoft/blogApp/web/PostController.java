@@ -19,7 +19,6 @@ public class PostController {
     Logger logger = LoggerFactory.getLogger(getClass());
 
 
-
     @PostMapping
     public Post save(@RequestBody Post post) {
         logger.info("Save new post {} ", post);
@@ -39,7 +38,7 @@ public class PostController {
 
     @GetMapping
     public List<Post> getAndSort(@RequestParam(value = "title", required = false) String title,
-                                  @RequestParam(value = "sort", required = false) String sort) {
+                                 @RequestParam(value = "sort", required = false) String sort) {
         if (title != null) {
             logger.info("findAllPostsByTitle");
             return defaultService.findByTitle(title);
@@ -49,6 +48,21 @@ public class PostController {
         } else {
             return defaultService.getAll();
         }
+    }
+
+    @GetMapping("/star")
+    public List<Post> getPostsMarkByStar() {
+        return defaultService.returnMarkedByStar();
+    }
+
+    @PutMapping("/{id}/star")
+    public Post markPostByStar(@PathVariable Long id) {
+        return defaultService.markedByStar(id);
+    }
+
+    @DeleteMapping("/{id}/star")
+    public Post updatePostBySetStarFalse(@PathVariable Long id) {
+        return defaultService.unmarkedByStar(id);
     }
 
 }

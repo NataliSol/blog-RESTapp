@@ -18,5 +18,10 @@ public interface PostService {
 
     List<Post> findByTitleAndSort();
 
+    List<Post> returnMarkedByStar();
+
+    Post markedByStar(Long id);
+    Post unmarkedByStar(Long id);
+
 }
 

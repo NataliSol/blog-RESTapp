@@ -42,4 +42,15 @@ public class DefaultService implements PostService {
     public List<Post> findByTitleAndSort() {
         return postRepository.findByOrderByTitleAsc();
     }
+    @Override
+    public List<Post> returnMarkedByStar() {
+        return postRepository.returnMarkedByStar();
+    }
+    public Post markedByStar(Long id){
+        return postRepository.markedByStar(id);
+    }
+    public Post unmarkedByStar(Long id){
+        return postRepository.unmarkedByStar(id);
+    }
+
 }
