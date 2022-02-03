@@ -11,26 +11,43 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DefaultService implements PostService {
 
-
     private final PostRepository postRepository;
 
+    @Override
     public List<Post> getAll() {
-        List<Post> users = postRepository.findAll();
-        System.out.println("Posts in blog: " + users.size());
-        return users;
+        return postRepository.findAll();
     }
 
+    @Override
     public Post save(Post post) {
-       return postRepository.save(post);
+        Post savedPost = postRepository.findById(post.getId()).orElse(null);
+        if (savedPost == null) {
+            return null;
+        } else {
+            return postRepository.save(post);
+        }
     }
 
+    @Override
+    public Post getById(Long id) {
+        return postRepository.findById(id).orElse(null);
+    }
+
+
+    @Override
     public void delete(Long id) {
         postRepository.deleteById(id);
     }
 
-    public void update(Long id, Post post) {
-        post.setId(id);
-        postRepository.save(post);
+
+    @Override
+    public Post update(Post post) {
+        Post existingPost = postRepository.findById(post.getId()).orElse(null);
+        if (existingPost != null) {
+            return postRepository.save(post);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -42,15 +59,19 @@ public class DefaultService implements PostService {
     public List<Post> findByTitleAndSort() {
         return postRepository.findByOrderByTitleAsc();
     }
+
     @Override
     public List<Post> returnMarkedByStar() {
         return postRepository.returnMarkedByStar();
     }
-    public Post markedByStar(Long id){
+
+    @Override
+    public Post markedByStar(Long id) {
         return postRepository.markedByStar(id);
     }
-    public Post unmarkedByStar(Long id){
+
+    @Override
+    public Post unmarkedByStar(Long id) {
         return postRepository.unmarkedByStar(id);
     }
-
 }

@@ -5,6 +5,8 @@ import com.luxoft.blogApp.service.DefaultService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,26 +16,43 @@ import java.util.List;
 @RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
 
+
 public class PostController {
     private final DefaultService defaultService;
     Logger logger = LoggerFactory.getLogger(getClass());
 
+    @GetMapping
+    public List<Post> getAllPosts() {
+        return defaultService.getAll();
+    }
 
     @PostMapping
     public Post save(@RequestBody Post post) {
-        logger.info("Save new post {} ", post);
+        logger.info("obtain request to save new post {} ", post);
         return defaultService.save(post);
 
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        defaultService.delete(id);
+     ResponseEntity<Post> delete (@PathVariable Long id) {
+        Post post = defaultService.getById(id);
+        if (post == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            defaultService.delete(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
     }
 
     @PutMapping("/{id}")
-    public void update(@PathVariable Long id, @RequestBody Post post) {
-        defaultService.update(id, post);
+    ResponseEntity<Post> update(@RequestBody Post post, @PathVariable Long id) {
+        post.setId(id);
+        Post savedPost = defaultService.save(post);
+        if (savedPost == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(savedPost, HttpStatus.OK);
+        }
     }
 
     @GetMapping

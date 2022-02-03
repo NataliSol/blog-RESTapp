@@ -10,9 +10,11 @@ public interface PostService {
 
     Post save(Post post);
 
+    Post getById(Long id);
+
     void delete(Long id);
 
-    void update(Long id, Post post);
+    Post update(Post post);
 
     List<Post> findByTitle(String title);
 
@@ -21,7 +23,7 @@ public interface PostService {
     List<Post> returnMarkedByStar();
 
     Post markedByStar(Long id);
-    Post unmarkedByStar(Long id);
 
+    Post unmarkedByStar(Long id);
 }
 
