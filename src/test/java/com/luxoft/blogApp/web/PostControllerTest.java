@@ -62,10 +62,10 @@ class PostControllerTest {
                 .build();
 
 
-        when(defaultService.findByTitleAndSort()).thenReturn(List.of(post, nextPost));
+        when(defaultService.findAllWithSort("title")).thenReturn(List.of(post, nextPost));
         this.mockMvc
                 .perform(MockMvcRequestBuilders
-                        .get("/api/v1/posts?sort={title}", "fashion"))
+                        .get("/api/v1/posts?sort=title", "fashion"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.size()", Matchers.is(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("fashion"))
@@ -76,6 +76,12 @@ class PostControllerTest {
 
     @Test
     void postDeleted() throws Exception {
+        Post post = Post.builder()
+                .id(1L)
+                .title("fashion")
+                .content("chanel spring couture collection")
+                .build();
+        when(defaultService.getById(post.getId())).thenReturn(post);
         this.mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/v1/posts/{id}", 1))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -90,11 +96,11 @@ class PostControllerTest {
                 .content("chanel spring couture collection")
                 .build();
 
+        when(defaultService.update(post)).thenReturn(post);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/posts/1")
                         .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(post)))
                 .andExpect(status().isOk());
-
-        verify(defaultService, times(1)).update(1L, post);
+        verify(defaultService, times(1)).update(post);
 
     }
 
@@ -113,7 +119,6 @@ class PostControllerTest {
                 .star(true)
                 .build();
         when(defaultService.returnMarkedByStar()).thenReturn(List.of(post, nextPost));
-
         this.mockMvc
                 .perform(MockMvcRequestBuilders
                         .get("/api/v1/posts/star"))

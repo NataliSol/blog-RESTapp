@@ -16,14 +16,13 @@ public interface PostService {
 
     Post update(Post post);
 
-    List<Post> findByTitle(String title);
-
-    List<Post> findByTitleAndSort();
+    List<Post> findAllByTitle(String sortCriteria);
 
     List<Post> returnMarkedByStar();
 
     Post markedByStar(Long id);
 
     Post unmarkedByStar(Long id);
+
 }
 

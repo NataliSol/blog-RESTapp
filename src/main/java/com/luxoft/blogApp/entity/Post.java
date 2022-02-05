@@ -26,3 +26,5 @@ public class Post {
     @Column
     private boolean star;
 }
+
+

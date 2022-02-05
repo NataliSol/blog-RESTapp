@@ -9,13 +9,10 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    List<Post> findByTitleIs(String title);
+    List<Post> findByTitle(String title);
 
-    List<Post> findByOrderByTitleAsc();
+    List<Post> findAllByStarIsTrue();
 
-    List<Post> returnMarkedByStar();
+    List<Post> findAllByStar(boolean star);
 
-    Post markedByStar(Long id);
-
-    Post unmarkedByStar(Long id);
 }
