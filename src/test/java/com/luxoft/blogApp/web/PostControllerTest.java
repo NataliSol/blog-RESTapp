@@ -4,11 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luxoft.blogApp.entity.Post;
 import com.luxoft.blogApp.service.DefaultService;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -19,7 +24,9 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@SpringBootTest
+@RunWith(SpringRunner.class)
+@AutoConfigureMockMvc
 class PostControllerTest {
 
     @Autowired
@@ -30,6 +37,7 @@ class PostControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
+    @DisplayName(value = "Verify post request is SAVED")
     void postSaved() throws Exception {
         Post post = Post.builder()
                 .title("fashion")
@@ -49,6 +57,7 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName(value = "Verify post request is SORTED by title")
     void sortedPostsByTitle() throws Exception {
         Post post = Post.builder()
                 .id(1L)
@@ -75,6 +84,7 @@ class PostControllerTest {
 
 
     @Test
+    @DisplayName(value = "Verify post request is DELETED by ID")
     void postDeleted() throws Exception {
         Post post = Post.builder()
                 .id(1L)
@@ -89,6 +99,7 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName(value = "Verify post request is UPDATED by ID")
     void postUpdated() throws Exception {
         Post post = Post.builder()
                 .id(1L)
@@ -105,6 +116,7 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName(value = "Verify post request is MARKED by star")
     public void methodMarkedByStarIsCorrect() throws Exception {
         Post post = Post.builder()
                 .id(1L)
@@ -130,20 +142,7 @@ class PostControllerTest {
     }
 
     @Test
-    public void checkMethodMarkPostByStarCorrect() throws Exception {
-        Post post = Post.builder()
-                .id(1L)
-                .title("fashion")
-                .content("chanel spring couture collection")
-                .star(true)
-                .build();
-        when(defaultService.markedByStar(1L)).thenReturn(post);
-        this.mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/posts/{id}/star", 1))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.star").value(true));
-    }
-
-    @Test
+    @DisplayName(value = "Verify post request is UNMARKED by star by ID")
     public void checkMethodDeleteStarFromPostById() throws Exception {
         Post post = Post.builder()
                 .id(1L)
