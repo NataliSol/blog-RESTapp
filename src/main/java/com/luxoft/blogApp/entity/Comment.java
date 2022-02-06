@@ -22,7 +22,6 @@ public class Comment {
     private String text;
     @Column
     private Date creationDate;
-    @ToString.Exclude
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "post_id")
     @JsonIgnore

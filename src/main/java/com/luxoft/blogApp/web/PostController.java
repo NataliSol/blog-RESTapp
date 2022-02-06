@@ -1,6 +1,9 @@
 package com.luxoft.blogApp.web;
 
+import com.luxoft.blogApp.dto.PostWithoutCommentDto;
+import com.luxoft.blogApp.entity.Comment;
 import com.luxoft.blogApp.entity.Post;
+import com.luxoft.blogApp.service.CommentServiceImpl;
 import com.luxoft.blogApp.service.DefaultService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -19,16 +22,34 @@ import java.util.List;
 
 public class PostController {
     private final DefaultService defaultService;
+    private final CommentServiceImpl commentService;
     Logger logger = LoggerFactory.getLogger(getClass());
 
 
     @PostMapping
     public Post save(@RequestBody Post post) {
+        post.setId(0L);
         logger.info("obtain request to save new post {} ", post);
         return defaultService.save(post);
 
     }
-
+    @GetMapping("/{id}/full")
+    ResponseEntity<PostWithoutCommentDto> getFullPostById(@PathVariable Long id) {
+        Post post = defaultService.getById(id);
+        if (post == null) {
+            return new ResponseEntity<PostWithoutCommentDto>(HttpStatus.BAD_REQUEST);
+        } else {
+            List<Comment> commentList = commentService.getAllByPostId(post.getId());
+            PostWithoutCommentDto dto = PostWithoutCommentDto.builder()
+                    .id(post.getId())
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .star(post.isStar())
+                    .comments(commentList)
+                    .build();
+            return new ResponseEntity<PostWithoutCommentDto>(dto, HttpStatus.OK);
+        }
+    }
     @DeleteMapping("/{id}")
     ResponseEntity<Post> delete(@PathVariable Long id) {
         Post post = defaultService.getById(id);
@@ -55,10 +76,8 @@ public class PostController {
     ResponseEntity<List<Post>> getAndSort(@RequestParam(value = "title", required = false) String title,
                                           @RequestParam(value = "sort", required = false) String sort) {
         if (title != null) {
-            logger.info("findAllPostsByTitle");
             return new ResponseEntity<List<Post>>(defaultService.findAllByTitle(title), HttpStatus.OK);
         } else if (sort != null) {
-            logger.info("findAllPostsAndSortedByTitle");
             return new ResponseEntity<List<Post>>(defaultService.findAllWithSort(sort), HttpStatus.OK);
         } else {
             return new ResponseEntity<List<Post>>(defaultService.getAll(), HttpStatus.OK);

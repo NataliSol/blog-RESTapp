@@ -1,11 +1,10 @@
 package com.luxoft.blogApp.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -25,6 +24,11 @@ public class Post {
     private String content;
     @Column
     private boolean star;
+    @ToString.Exclude
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "post_id")
+    @JsonIgnore
+    private List<Comment> comments;
 }
 
 

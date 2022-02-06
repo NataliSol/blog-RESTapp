@@ -2,12 +2,11 @@ package com.luxoft.blogApp.dto;
 
 import lombok.*;
 
-@Setter
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentCreateRequestDto {
+public class CommentWithPostDto {
 
     private String text;
 
